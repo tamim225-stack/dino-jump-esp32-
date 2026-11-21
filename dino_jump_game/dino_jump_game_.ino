@@ -351,6 +351,12 @@ void loop() {
 
   // 9. Collision
   if (cacActive && hitTest()) {
+    // Throw away any tap that was queued mid-air before the crash.
+    // Otherwise the GAME OVER branch above sees jumpQueued == true on
+    // the very next loop() and restarts instantly, so the player never
+    // gets to see their score. A fresh tap is now needed to play again.
+    jumpQueued = false;
+    doHighJump = false;
     sndDead();
     gState = ST_DEAD;
     showDeadScreen();
